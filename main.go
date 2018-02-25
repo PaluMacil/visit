@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"html/template"
+	"io"
 	"log"
 	"net/http"
 	"net/url"
@@ -20,6 +21,15 @@ func main() {
 	if _, err := os.Stat("content/layout.gohtml"); os.IsNotExist(err) {
 		log.Fatalln("layout.gohtml does not exist")
 	}
+
+	// Basic non-rotating log
+	os.MkdirAll("log", os.ModePerm)
+	f, err := os.OpenFile(filepath.Join("log", "log.txt"), os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer f.Close()
+	log.SetOutput(io.MultiWriter(os.Stderr, f))
 
 	// if not dev mode, parse templates during program load (otherwise, parse at each request)
 	var dev = len(os.Args) > 1 && strings.ToUpper(os.Args[1]) == "DEV"
