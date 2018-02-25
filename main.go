@@ -81,7 +81,7 @@ func main() {
 		//time from the end of the request header read to the end of the response write
 		WriteTimeout: 10 * time.Second,
 	}
-	fmt.Println("Now serving on port 3033")
+	log.Println("Now serving on port 3033")
 	log.Println(srv.ListenAndServe())
 }
 
